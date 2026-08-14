@@ -4828,6 +4828,305 @@ input:checked + .slider:before {
 .card-item.matched { background: rgba(255,224,130,0.2) !important; }
 .card-item .card-edit-btn:hover { background: var(--accent-light) !important; color: white; }
 .card-item .card-delete-btn:hover { background: rgba(183,28,28,0.18) !important; color: #b71c1c; }
+/* ===== 通话小窗 - 紧凑但保留全部功能 ===== */
+
+/* 1. 窗口尺寸 - 刚好容纳头像 + 计时器 + 按钮 */
+.call-window,
+.video-window {
+  position: fixed;
+  width: 110px !important;
+  height: 148px !important;
+  min-width: 100px !important;
+  min-height: 135px !important;
+  max-width: 130px !important;
+  max-height: 165px !important;
+  border-radius: 14px !important;
+  border-top: 3px solid #000 !important;
+  background: var(--bg-panel);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  resize: both;
+  cursor: move;
+  border: 1px solid rgba(92, 92, 92, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  touch-action: none;
+}
+
+.call-window:hover,
+.video-window:hover {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.call-window.active,
+.video-window.active {
+  transform: scale(1.02);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+.call-window {
+  border-top: 4px solid #000000;
+}
+
+.video-window {
+  border-top: 4px solid #000000;
+}
+
+/* 2. 标题栏 - 超紧凑 */
+.call-window .window-header,
+.video-window .window-header {
+  padding: 2px 6px !important;
+  min-height: 18px !important;
+  height: 18px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+.call-window .window-title,
+.video-window .window-title {
+  font-size: 0.45rem !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+  font-weight: 500;
+}
+
+.call-window .window-title i,
+.video-window .window-title i {
+  font-size: 0.55rem !important;
+}
+
+.call-window .window-title span,
+.video-window .window-title span {
+  font-size: 0.45rem !important;
+}
+
+.call-window .window-title {
+  color: #000000;
+}
+
+.video-window .window-title {
+  color: #000000;
+}
+
+/* 3. 控制按钮 - 超小 */
+.call-window .window-btn,
+.video-window .window-btn {
+  width: 14px !important;
+  height: 14px !important;
+  font-size: 0.4rem !important;
+  min-width: 14px !important;
+  min-height: 14px !important;
+  line-height: 1 !important;
+  border-radius: 50% !important;
+  background: rgba(0, 0, 0, 0.06) !important;
+  border: none;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  touch-action: manipulation;
+}
+
+.call-window .window-btn:hover,
+.video-window .window-btn:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* 4. 内容区 - 紧凑垂直排列 */
+.call-window .window-content,
+.video-window .window-content {
+  padding: 4px 4px 6px 4px !important;
+  gap: 2px !important;
+  justify-content: center !important;
+  align-items: center !important;
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  background: rgba(255, 255, 255, 0.92) !important;
+}
+
+/* 5. 头像 - 保留大小，清晰可见 */
+.call-window .call-avatar,
+.video-window .video-avatar {
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 42px !important;
+  min-height: 42px !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  border: 2px solid #000 !important;
+  flex-shrink: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+}
+
+.call-window .call-avatar img,
+.video-window .video-avatar img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+.call-window .call-avatar span,
+.video-window .video-avatar span {
+  font-size: 1.2rem !important;
+}
+
+/* 6. 状态文字 - 保留但缩小 */
+.call-window .calling-text,
+.video-window .calling-text {
+  font-size: 0.4rem !important;
+  margin: 1px 0 !important;
+  padding: 0 !important;
+  color: #666 !important;
+  text-align: center;
+}
+
+.call-window .in-call-text,
+.video-window .in-call-text {
+  font-size: 0.4rem !important;
+  padding: 1px 6px !important;
+  margin: 1px 0 !important;
+  background: rgba(0, 0, 0, 0.04) !important;
+  border-radius: 8px !important;
+  font-weight: 500;
+}
+
+/* 7. ★ 计时器 - 保留！清晰可读 ★ */
+.call-window .call-timer,
+.video-window .call-timer {
+  font-size: 0.7rem !important;
+  font-weight: 700 !important;
+  margin: 1px 0 !important;
+  padding: 0 !important;
+  font-family: 'Courier New', monospace !important;
+  color: #222 !important;
+  letter-spacing: 0.5px !important;
+  background: rgba(0, 0, 0, 0.04) !important;
+  padding: 1px 8px !important;
+  border-radius: 10px !important;
+}
+
+/* 8. ★ 按钮组 - 保留！接听/挂断 ★ */
+.call-window .call-buttons,
+.video-window .call-buttons {
+  gap: 4px !important;
+  margin-top: 2px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+}
+
+/* 接听按钮 - 绿色 */
+.call-window .call-buttons .accept-btn,
+.video-window .call-buttons .accept-btn {
+  padding: 2px 10px !important;
+  font-size: 0.45rem !important;
+  min-width: 36px !important;
+  min-height: 26px !important;
+  border-radius: 14px !important;
+  border: none !important;
+  background: #4caf50 !important;
+  color: white !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 2px !important;
+  cursor: pointer !important;
+  font-weight: 600 !important;
+}
+
+/* 拒绝/挂断按钮 - 红色 */
+.call-window .call-buttons .reject-btn,
+.call-window .call-buttons .end-btn,
+.video-window .call-buttons .reject-btn,
+.video-window .call-buttons .end-btn {
+  padding: 2px 10px !important;
+  font-size: 0.45rem !important;
+  min-width: 36px !important;
+  min-height: 26px !important;
+  border-radius: 14px !important;
+  border: none !important;
+  background: #f44336 !important;
+  color: white !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 2px !important;
+  cursor: pointer !important;
+  font-weight: 600 !important;
+}
+
+/* 按钮图标 */
+.call-window .call-buttons .accept-btn i,
+.call-window .call-buttons .reject-btn i,
+.call-window .call-buttons .end-btn i,
+.video-window .call-buttons .accept-btn i,
+.video-window .call-buttons .reject-btn i,
+.video-window .call-buttons .end-btn i {
+  font-size: 0.55rem !important;
+}
+
+/* 9. 移动端适配 */
+@media (max-width: 768px) {
+  .call-window,
+  .video-window {
+    width: 95px !important;
+    height: 130px !important;
+    min-width: 85px !important;
+    min-height: 118px !important;
+  }
+
+  .call-window .call-avatar,
+  .video-window .video-avatar {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 35px !important;
+    min-height: 35px !important;
+  }
+
+  .call-window .call-timer,
+  .video-window .call-timer {
+    font-size: 0.6rem !important;
+  }
+
+  .call-window .call-buttons .accept-btn,
+  .call-window .call-buttons .reject-btn,
+  .call-window .call-buttons .end-btn,
+  .video-window .call-buttons .accept-btn,
+  .video-window .call-buttons .reject-btn,
+  .video-window .call-buttons .end-btn {
+    padding: 1px 6px !important;
+    min-width: 28px !important;
+    min-height: 20px !important;
+    font-size: 0.4rem !important;
+  }
+}
+
+/* 10. 夜间模式适配 */
+.night-mode .call-window,
+.night-mode .video-window {
+  background: rgba(0, 0, 0, 0.98) !important;
+  border: 1px solid #222 !important;
+}
+
+.night-mode .call-window .window-header,
+.night-mode .video-window .window-header {
+  background: rgba(10, 10, 10, 0.95) !important;
+  border-bottom: 1px solid #222 !important;
+}
+  
 </style></head>
 <body>
 <!-- 气泡自定义样式注入点（由JS动态更新） -->
